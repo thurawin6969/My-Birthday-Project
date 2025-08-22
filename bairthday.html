@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>🎉 Birthday Wish</title>
+  <style>
+    :root{
+      --bg1:#0f1020; --bg2:#1a1b3a; --accent:#8b5cf6; --accent2:#06b6d4; --text:#f8fafc; --muted:#94a3b8;
+      --card:rgba(255,255,255,0.08); --card-border:rgba(255,255,255,0.15);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; color:var(--text); font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      background: radial-gradient(1200px 800px at 20% 10%, #1f1949, transparent 60%),
+                  radial-gradient(1000px 600px at 80% 0%, #0c3b5a, transparent 60%),
+                  linear-gradient(160deg, var(--bg1), var(--bg2));
+      overflow:hidden;
+    }
+    .stars{position:fixed; inset:0; pointer-events:none; background-image:radial-gradient(2px 2px at 20% 30%, #ffffff88 50%, transparent 52%),
+                  radial-gradient(1px 1px at 70% 10%, #ffffff66 50%, transparent 52%),
+                  radial-gradient(1.5px 1.5px at 40% 80%, #ffffff55 50%, transparent 52%),
+                  radial-gradient(1px 1px at 90% 60%, #ffffff55 50%, transparent 52%);
+      animation: twinkle 6s ease-in-out infinite alternate;
+    }
+    @keyframes twinkle { from{opacity:.7} to{opacity:1} }
+
+    .wrap{position:relative; height:100%; width:100%; display:grid; place-items:center; padding:24px}
+
+    .card{
+      width:min(820px, 92vw); border:1px solid var(--card-border); background:var(--card); backdrop-filter: blur(14px) saturate(130%);
+      border-radius:28px; padding:28px; box-shadow: 0 20px 80px rgba(0,0,0,.35);
+    }
+    .top{display:flex; align-items:center; justify-content:space-between; gap:12px}
+    .brand{display:flex; align-items:center; gap:12px; letter-spacing:.3px}
+    .brand .logo{display:grid; place-items:center; width:40px; height:40px; border-radius:12px; background:linear-gradient(135deg, var(--accent), var(--accent2)); font-size:22px}
+    .brand .name{font-weight:700}
+    .controls{display:flex; gap:10px}
+    .btn{appearance:none; border:1px solid var(--card-border); background:rgba(255,255,255,0.06); color:var(--text); padding:10px 14px; border-radius:14px; font-weight:600; cursor:pointer; transition:.2s transform, .2s background, .2s border; backdrop-filter:saturate(140%)}
+    .btn:hover{transform:translateY(-1px); background:rgba(255,255,255,0.12);}
+    .btn:active{transform:translateY(0)}
+
+    .hero{display:grid; gap:16px; margin-top:22px; text-align:center}
+    h1{font-size:clamp(28px, 6vw, 56px); margin:0; line-height:1.1}
+    .gradient{background:linear-gradient(90deg, #fff, #e9d5ff 35%, #99f6e4 65%, #fff); -webkit-background-clip:text; background-clip:text; color:transparent}
+    .subtitle{color:var(--muted); font-size:clamp(14px, 2.5vw, 18px)}
+
+    .actions{display:flex; justify-content:center; gap:12px; margin-top:8px; flex-wrap:wrap}
+    .action{padding:12px 18px; border-radius:999px; border:1px solid var(--card-border); background:linear-gradient(180deg, rgba(255,255,255,.14), rgba(255,255,255,.06)); cursor:pointer; font-weight:700}
+    .action.primary{background:linear-gradient(180deg, rgba(139,92,246,.95), rgba(6,182,212,.95)); border:none}
+
+    .panel{margin-top:18px; display:grid; gap:12px}
+    .inputs{display:grid; grid-template-columns:1fr 1fr; gap:10px}
+    .inputs input, .inputs textarea{
+      width:100%; padding:12px 14px; border-radius:12px; border:1px solid var(--card-border); background:rgba(0,0,0,.25); color:var(--text); resize:vertical; min-height:44px
+    }
+    .inputs textarea{min-height:72px}
+
+    .stage{position:relative; height:48vh; min-height:320px; border-radius:20px; border:1px dashed rgba(255,255,255,.18); overflow:hidden; margin-top:8px; display:grid; place-items:center}
+    .cake{font-size:80px; filter:drop-shadow(0 10px 30px rgba(0,0,0,.5)); transform:translateY(8px)}
+    .message{position:absolute; inset:auto 16px 16px 16px; text-align:center; font-size:clamp(16px,2.8vw,22px); color:#fff}
+
+    /* Confetti dots */
+    .confetti{position:fixed; inset:0; overflow:hidden; pointer-events:none}
+    .piece{position:absolute; width:10px; height:16px; opacity:0; will-change: transform, opacity}
+
+    /* Balloon styling */
+    .balloon{position:absolute; bottom:-120px; font-size:40px; filter:drop-shadow(0 6px 14px rgba(0,0,0,.4)); animation:floatUp linear forwards}
+    @keyframes floatUp { to { transform: translateY(-110vh) translateX(var(--drift, 0px)) rotate(var(--rot, 0deg)); opacity:0.9 } }
+
+    /* Typewriter caret */
+    .caret{display:inline-block; width:1ch; border-right:2px solid #fff; animation:blink 1.1s steps(1) infinite}
+    @keyframes blink { 50%{border-color:transparent} }
+
+    /* Reduced motion */
+    @media (prefers-reduced-motion: reduce){
+      .piece, .balloon{animation:none!important}
+    }
+  </style>
+</head>
+<body>
+  <div class="stars" aria-hidden="true"></div>
+  <div class="confetti" id="confetti" aria-hidden="true"></div>
+
+  <div class="wrap">
+    <section class="card" aria-live="polite">
+      <div class="top">
+        <div class="brand">
+          <div class="logo" aria-hidden="true">🎉</div>
+          <div class="name">Birthday Wish</div>
+        </div>
+        <div class="controls">
+          <button class="btn" id="playTone" aria-label="Play a short birthday tune">▶︎ Tune</button>
+          <button class="btn" id="surpriseBtn" aria-label="Launch surprise animations">💥 Surprise</button>
+        </div>
+      </div>
+
+      <div class="hero">
+        <h1 id="title"><span class="gradient">Happy Birthday</span>, <span id="who">Friend</span><span class="caret" aria-hidden="true"></span> 🎂</h1>
+        <p class="subtitle">Type a name and message, then hit <strong>Surprise</strong> to celebrate with confetti, floating balloons, and a tiny chime.</p>
+        <div class="actions">
+          <button class="action primary" id="openNow">Open Surprise ✨</button>
+          <button class="action" id="makeBalloons">Add Balloons 🎈</button>
+          <button class="action" id="rainConfetti">Confetti Rain 🎊</button>
+        </div>
+      </div>
+
+      <div class="panel" role="region" aria-label="Personalize message">
+        <div class="inputs">
+          <input id="nameInput" placeholder="Recipient name (e.g., Thida)" aria-label="Recipient name" />
+          <input id="fromInput" placeholder="From (optional)" aria-label="From who" />
+          <textarea id="msgInput" placeholder="Your birthday message..." aria-label="Birthday message"></textarea>
+        </div>
+      </div>
+
+      <div class="stage" id="stage" aria-label="Celebration stage">
+        <div class="cake" aria-hidden="true">🎂</div>
+        <div class="message" id="finalMsg">Wishing you a day filled with smiles, sweet cake, and all your favorite people. 💜</div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    // Elements
+    const whoEl = document.getElementById('who');
+    const titleEl = document.getElementById('title');
+    const confettiEl = document.getElementById('confetti');
+    const stage = document.getElementById('stage');
+    const finalMsg = document.getElementById('finalMsg');
+
+    const nameInput = document.getElementById('nameInput');
+    const fromInput = document.getElementById('fromInput');
+    const msgInput = document.getElementById('msgInput');
+
+    const surpriseBtn = document.getElementById('surpriseBtn');
+    const openNow = document.getElementById('openNow');
+    const makeBalloonsBtn = document.getElementById('makeBalloons');
+    const confettiBtn = document.getElementById('rainConfetti');
+    const playToneBtn = document.getElementById('playTone');
+
+    // Helpers
+    const rand = (min, max) => Math.random() * (max - min) + min;
+
+    function updateTitle(){
+      const name = (nameInput.value || 'Friend').trim();
+      whoEl.textContent = name;
+    }
+
+    function updateMessage(){
+      const msg = (msgInput.value || 'Wishing you a day filled with smiles, sweet cake, and all your favorite people. 💜').trim();
+      const from = (fromInput.value || '').trim();
+      finalMsg.textContent = msg + (from ? ` — ${from}` : '');
+    }
+
+    nameInput.addEventListener('input', updateTitle);
+    msgInput.addEventListener('input', updateMessage);
+    fromInput.addEventListener('input', updateMessage);
+
+    // Confetti generator
+    function burstConfetti(count = 120){
+      const colors = ['#f43f5e','#22d3ee','#f59e0b','#10b981','#8b5cf6','#e879f9'];
+      const viewportW = window.innerWidth;
+      const viewportH = window.innerHeight;
+
+      for(let i=0;i<count;i++){
+        const piece = document.createElement('div');
+        piece.className = 'piece';
+        const w = rand(6,12), h = rand(8,16);
+        piece.style.width = w + 'px'; piece.style.height = h + 'px';
+        piece.style.left = rand(0, viewportW) + 'px';
+        piece.style.top = '-20px';
+        piece.style.background = colors[Math.floor(rand(0, colors.length))];
+        piece.style.opacity = rand(.8, 1);
+
+        const fall = rand(0.9, 1.6) * 1000; // base multiplier
+        const duration = rand(2500, 5200);
+        const amplitude = rand(-120, 120);
+        const rotate = rand(-220, 220);
+
+        const keyframes = [
+          { transform: `translate(0, 0) rotate(0deg)`, opacity: rand(.7, 1) },
+          { transform: `translate(${amplitude}px, ${viewportH + 60}px) rotate(${rotate}deg)`, opacity: rand(.7, 1) }
+        ];
+        const timing = { duration, easing: 'cubic-bezier(.15,.6,.25,1)', iterations: 1, fill:'forwards' };
+        confettiEl.appendChild(piece);
+        piece.animate(keyframes, timing).onfinish = () => piece.remove();
+      }
+    }
+
+    // Balloon generator
+    function launchBalloons(n = 12){
+      for(let i=0;i<n;i++){
+        const b = document.createElement('div');
+        b.className = 'balloon';
+        b.textContent = Math.random() > .7 ? '🎈' : (Math.random()>.5 ? '🎈' : '🎈');
+        b.style.left = rand(0, 95) + 'vw';
+        b.style.setProperty('--drift', rand(-80, 80) + 'px');
+        b.style.setProperty('--rot', rand(-25, 25) + 'deg');
+        const dur = rand(9000, 15000);
+        b.style.animationDuration = dur + 'ms';
+        document.body.appendChild(b);
+        setTimeout(()=>b.remove(), dur + 1200);
+      }
+    }
+
+    // Tiny WebAudio tune (no external files)
+    async function playTinyTune(){
+      try{
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const notes = [261.63, 329.63, 392.00, 523.25, 392.00, 523.25]; // C E G C G C
+        let t = ctx.currentTime;
+        for(const f of notes){
+          const o = ctx.createOscillator();
+          const g = ctx.createGain();
+          o.type = 'triangle'; o.frequency.value = f;
+          g.gain.setValueAtTime(0.0001, t);
+          g.gain.exponentialRampToValueAtTime(0.18, t+0.02);
+          g.gain.exponentialRampToValueAtTime(0.0001, t+0.35);
+          o.connect(g).connect(ctx.destination);
+          o.start(t); o.stop(t+0.36);
+          t += 0.22;
+        }
+      }catch(err){ console.log('Audio not allowed yet', err); }
+    }
+
+    // Typewriter effect for the headline name once user types
+    let typing;
+    function typewriter(str){
+      if(typing) clearInterval(typing);
+      const base = 'Happy Birthday, ';
+      let i = 0;
+      const target = document.getElementById('who');
+      typing = setInterval(()=>{
+        target.textContent = str.slice(0, i++);
+        if(i > str.length) clearInterval(typing);
+      }, 55);
+    }
+
+    nameInput.addEventListener('input', (e)=> typewriter((e.target.value || 'Friend').trim()));
+
+    // Actions
+    function runSurprise(){
+      updateTitle(); updateMessage();
+      burstConfetti(160);
+      launchBalloons(16);
+      playTinyTune();
+      stage.animate([
+        { transform:'scale(1)', boxShadow:'0 0 0px rgba(0,0,0,0)' },
+        { transform:'scale(1.02)', boxShadow:'0 30px 100px rgba(0,0,0,.35)' },
+        { transform:'scale(1)', boxShadow:'0 0 0px rgba(0,0,0,0)' },
+      ], { duration: 900, easing:'cubic-bezier(.18,.75,.25,1)' });
+    }
+
+    [surpriseBtn, openNow, confettiBtn, makeBalloonsBtn, playToneBtn].forEach((btn)=>{
+      btn.addEventListener('click', (e)=>{
+        if(e.currentTarget === confettiBtn) return burstConfetti(140);
+        if(e.currentTarget === makeBalloonsBtn) return launchBalloons(14);
+        if(e.currentTarget === playToneBtn) return playTinyTune();
+        runSurprise();
+      })
+    })
+
+    // Keyboard shortcuts
+    document.addEventListener('keydown', (e)=>{
+      if(e.key === 'Enter' && (document.activeElement === nameInput || document.activeElement === msgInput || document.activeElement === fromInput)){
+        runSurprise();
+      }
+    });
+
+    // Initial content
+    updateTitle(); updateMessage();
+  </script>
+</body>
+</html>
